@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="0.4.0">
+	<integrator type="path">
+		<integer name="maxDepth" value="-1"/>
+	</integrator>
+
+	<sensor type="perspective">
+		<string name="fovAxis" value="smaller"/>
+		<float name="nearClip" value="10"/>
+		<float name="farClip" value="2800"/>
+		<float name="focusDistance" value="1000"/>
+		<transform name="toWorld">
+			<lookAt origin="278, 273, -800" target="278, 273, -799" up="0, 1, 0"/>
+		</transform>
+		<float name="fov" value="39.5"/>
+
+		<sampler type="ldsampler">
+			<integer name="sampleCount" value="4"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="width" value="256"/>
+			<integer name="height" value="256"/>
+
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+
+	<bsdf type="area_ggx" id="box">
+		<rgb  name="reflectance" value="0.8,0.8,0.8"/>
+		<float  name="roughness" value="0.99"/>
+	</bsdf>
+
+	<bsdf type="area_ggx" id="white">
+		<rgb  name="reflectance" value="1.0,1.0,1.0"/>
+		<float  name="roughness" value="0.99"/>
+	</bsdf>
+
+	
+	<bsdf type="area_ggx" id="red">
+		<rgb  name="reflectance" value="1.0,0.0,0.0"/>
+		<float  name="roughness" value="0.99"/>
+	</bsdf>
+
+	<bsdf type="area_ggx" id="green">
+		<rgb  name="reflectance" value="0.0,1.0,0.0"/>
+		<float  name="roughness" value="0.99"/>
+	</bsdf>
+	
+	<bsdf type="area_ggx" id="bunny_bsdf">
+		<rgb  name="reflectance" value="1.0,0.9,1.0"/>
+		<float  name="roughness" value="0.1"/>
+	</bsdf>
+	
+	<bsdf type="glass" id="sphere">
+		<rgb  name="reflectance" value="1.0,1.0,1.0"/>
+		<float  name="roughness" value="0.01"/>
+	</bsdf>
+	
+
+
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_floor.obj"/>
+	
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_ceiling.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_back.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_greenwall.obj"/>
+
+		<ref id="green"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_redwall.obj"/>
+
+		<ref id="red"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/bunny.obj"/>
+		<transform name="toWorld">
+			<scale x="80" y="80" z="80"/>
+			<translate x="170" y="20" z="200"/>
+			
+			
+		</transform>
+		<ref id="bunny_bsdf"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_largebox.obj"/>
+		<ref id="box"/>
+	</shape>
+	
+	<shape type="obj">
+		<string name="filename" value="meshes/sphere.obj"/>
+		<transform name="toWorld">
+			<scale x="80" y="80" z="80"/>
+			<translate x="250" y="80" z="50"/>
+		</transform>
+		<ref id="sphere"/>
+	</shape>
+	
+	
+	
+	
+	<light type="point">
+		<position x="213" y="500" z="227"/>
+		<color value="50,50,50"/>
+	</light>
+	
+	<light type="point">
+		<position x="343" y="500" z="227"/>
+		<color value="50,50,50"/>
+	</light>
+	
+	<light type="point">
+		<position x="343" y="500" z="332"/>
+		<color value="50,50,50"/>
+	</light>
+	
+	<light type="point">
+		<position x="213" y="500" z="332"/>
+		<color value="50,50,50"/>
+	</light>
+</scene>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="0.4.0">
+	<integrator type="path">
+		<integer name="maxDepth" value="-1"/>
+	</integrator>
+
+	<sensor type="perspective">
+		<string name="fovAxis" value="smaller"/>
+		<float name="nearClip" value="10"/>
+		<float name="farClip" value="2800"/>
+		<float name="focusDistance" value="1000"/>
+		<transform name="toWorld">
+			<lookAt origin="0, 5, 10" target="0, 0, 0" up="0, 1, 0"/>
+		</transform>
+		<float name="fov" value="39.3077"/>
+
+		<sampler type="ldsampler">
+			<integer name="sampleCount" value="4"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="width" value="512"/>
+			<integer name="height" value="512"/>
+
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+
+	<bsdf type="diffuse" id="box">
+		<rgb  name="reflectance" value="0.7,0.8,0.3"/>
+		<rgb  name="albedo" value="0.4,0.4,0.4"/>
+	</bsdf>
+
+
+	<shape type="obj">
+		<string name="filename" value="meshes/bunny.obj"/>
+		<ref id="box"/>
+	</shape>
+	
+	<light type="point">
+		<position x="-5" y="5" z="5"/>
+		<color value="15,15,15"/>
+	</light>
+	
+	<light type="point">
+		<position x="5" y="5" z="5"/>
+		<color value="15,1,1"/>
+	</light>
+	
+	<light type="point">
+		<position x="-5" y="-5" z="5"/>
+		<color value="1,15,1"/>
+	</light>
+	
+	<light type="point">
+		<position x="5" y="-5" z="5"/>
+		<color value="1,1,15"/>
+	</light>
+
+</scene>
