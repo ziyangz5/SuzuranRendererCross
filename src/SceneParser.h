@@ -353,7 +353,6 @@ namespace szr
                         }
                     }
                 }
-                            std::cout<<filename<<std::endl;
                 shape->LoadObj(filename);
                 shape->SetWorldMatrix(to_world);
                 shape->shaderID = material_id;
