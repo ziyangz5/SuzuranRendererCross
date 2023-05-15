@@ -403,7 +403,9 @@ int main() {
     printf("OpenGL version used by this application (%s): \n", glGetString(GL_VERSION));
 
     //Scene* scene = SceneParser::parse_scene("../Scenes/cbox/cbox_opengl.xml");
+    std::cout<<"Creating Scene.."<<std::endl;
     Scene* scene = SceneParser::parse_scene("../Scenes/cbox_t/cbox_opengl_area.xml");
+    std::cout<<"Created."<<std::endl;
     camera = scene->camera;
     WinX = camera.defaultWinX;
     WinY = camera.defaultWinY;

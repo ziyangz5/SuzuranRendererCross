@@ -353,6 +353,7 @@ namespace szr
                         }
                     }
                 }
+                            std::cout<<filename<<std::endl;
                 shape->LoadObj(filename);
                 shape->SetWorldMatrix(to_world);
                 shape->shaderID = material_id;
@@ -417,6 +418,7 @@ namespace szr
                 std::cerr << "Error offset: " << result.offset << std::endl;
                 throw ("Parse error");
             }
+
             std::filesystem::path old_path = std::filesystem::current_path();
             std::filesystem::current_path(path.parent_path());
 
@@ -439,7 +441,7 @@ namespace szr
                 }
                 else if (name == "bsdf") {
                     std::filesystem::current_path(old_path);
-
+                    
                     std::string material_name;
                     ShaderProgram* s; ShaderProgram* geo_s;
                     std::tie(s, geo_s) = parse_bsdf(child, material_name);

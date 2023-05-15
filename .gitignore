@@ -39,10 +39,12 @@
 **/*.cbp
 **/CMakeScripts
 **/compile_commands.json
-
+build
+build/*
 include/divisible/*
 
 
 ## Local 
 
-.idea/*.xml
+.idea/
+.vscode/
