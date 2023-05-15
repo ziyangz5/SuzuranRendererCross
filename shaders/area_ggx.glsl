@@ -300,7 +300,7 @@ void main()
     vec2 uv = vec2(roughness, theta/(0.5*pi));
     uv = uv*LUT_SCALE + LUT_BIAS;
 
-    vec4 t = texture2D(ltc_mat, uv);
+    vec4 t = texture(ltc_mat, uv);
     mat3 Minv = mat3(
         vec3(  1,   0, t.y),
         vec3(  0, t.z,   0),
@@ -308,7 +308,7 @@ void main()
     );
 
     vec3 spec = LTC_Evaluate(N, V, pos, Minv, lightPoints, twoSided);
-    spec *=  texture2D(ltc_mag, uv).r;
+    spec *=  texture(ltc_mag, uv).r;
     
     vec3 diff = LTC_Evaluate(N, V, pos, mat3(1), lightPoints, twoSided); 
     vec3 lcol = vec3(25.2,18.9,13.5);

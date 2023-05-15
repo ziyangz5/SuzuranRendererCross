@@ -33,7 +33,7 @@ in vec2 In;
 
 uniform sampler2D screenTexture;
 uniform vec2 viewportSize;
-const vec2 inverseScreenSize = 1/viewportSize;
+vec2 inverseScreenSize = 1/viewportSize;
 
 const float FXAA_SPAN_MAX = 16.0;
 const float FXAA_REDUCE_MUL = 1.0/4.0;

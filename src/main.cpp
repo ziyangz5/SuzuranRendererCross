@@ -174,7 +174,7 @@ void render(GLFWwindow* window, Scene* scene)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     //Initializing post-processing-buffer
-    ShaderProgram* ppFXAA = new ShaderProgram("shaders/pp_FXAA.glsl", ShaderProgram::eRender);
+    ShaderProgram* ppFXAA = new ShaderProgram("../shaders/pp_FXAA.glsl", ShaderProgram::eRender);
     ppFXAA->use();
     ppFXAA->setInt("screenTexture", 0);
     ppFXAA->unuse();
