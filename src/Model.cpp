@@ -1,5 +1,5 @@
 #include "Model.h"
-#include "ext/3rdparty/fast_obj.h"
+#include "3rdparty/fast_obj.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 using namespace szr;
