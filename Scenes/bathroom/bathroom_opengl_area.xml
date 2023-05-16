@@ -10,8 +10,8 @@
 		<float name="nearClip" value="10"/>
 		<float name="farClip" value="2800"/>
 		<float name="focusDistance" value="1000"/>
-        <transform name="to_world">
-            <matrix value="-0.993341 -0.0130485 -0.114467 4.44315 0 0.993565 -0.11326 16.9344 0.115208 -0.112506 -0.98695 49.9102 0 0 0 1" />
+        <transform name="toWorld">
+            <lookAt origin="-2, 20, 10" target="3, 18, -1" up="0, 1, 0"/>
         </transform>
 		<float name="fov" value="60"/>
 

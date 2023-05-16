@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "Core.h"
 #include "Camera.h"
 #include "Shader.h"

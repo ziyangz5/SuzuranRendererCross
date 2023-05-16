@@ -8,8 +8,7 @@
 #include "3rdparty/pugixml.hpp"
 #include <regex>
 #include <filesystem>
-#define STB_IMAGE_IMPLEMENTATION
-#include "3rdparty/stb_image.h"
+
 namespace szr
 {
 
@@ -150,7 +149,7 @@ namespace szr
                     if (name == "fov") {
                         fov = std::stof(child.attribute("value").value());
                     }
-                    else if (name == "toWorld") {
+                    else if (name == "toWorld"||name == "to_world") {
                         to_world = parse_transform(child);
                     }
                     else if (name == "fovAxis") {
@@ -178,30 +177,8 @@ namespace szr
             return cam;
         }
 
-        static Texture* parse_texture(pugi::xml_node node)
-        {
-            std::filesystem::current_path(current_path);
-            Texture* texture = nullptr;
-            for (auto child : node.children()) {
-                std::string name = child.attribute("name").value();
+        static Texture* parse_texture(pugi::xml_node node);
 
-                if (name == "filename")
-                {
-                    int width, height, nrChannels;
-                    std::string filename = child.attribute("value").value();
-                    stbi_set_flip_vertically_on_load(true);
-                    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 0);
-                    texture = new Texture(data, width, height, nrChannels);
-                    if (!data)
-                    {
-                        std::cerr << "Unable to open texture:" + filename << std::endl;
-                    }
-
-                }
-            }
-            std::filesystem::current_path(old_path);
-            return texture;
-        }
 
         static auto parse_bsdf(pugi::xml_node node, std::string& material_name)
         {
