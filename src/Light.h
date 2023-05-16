@@ -23,9 +23,13 @@ namespace szr
         glm::vec3 direction;
         glm::vec3 color;
 
-        //TODO: Support spot and area lighting
+        glm::vec3 pos_x1;
+        glm::vec3 pos_x2;
+        glm::vec3 pos_x3;
+        glm::vec3 pos_x4;
     };
 }
+
 
 
 #endif //SUZURANRENDERER_LIGHT_H

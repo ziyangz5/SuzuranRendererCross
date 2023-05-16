@@ -8,9 +8,11 @@
 
 layout(location=0) in vec3 Position;
 layout(location=1) in vec3 Normal;
+layout(location=2) in vec2 TexCoord;
 
 out vec3 fragPosition;
 out vec3 fragNormal;
+out vec2 fragTexCoord;
 
 uniform mat4 ModelMtx=mat4(1);
 uniform mat4 ModelViewProjMtx=mat4(1);
@@ -21,13 +23,14 @@ uniform mat4 InvTransModelMtx=mat4(1);
 ////////////////////////////////////////
 
 void main() {
-    
+
 	gl_Position= ModelViewProjMtx * vec4(Position,1);
-    
+
     vec4 out_pos = ModelMtx * vec4(Position,1);
 
 	fragPosition= out_pos.xyz/out_pos.w;
 	fragNormal= normalize(vec3(ModelMtx * vec4(Normal,0)));
+    fragTexCoord = TexCoord;
 }
 
 #endif
@@ -38,6 +41,7 @@ void main() {
 
 in vec3 fragPosition;
 in vec3 fragNormal;
+in vec2 fragTexCoord;
 
 // material parameters
 uniform vec3 albedo = vec3(1,1,1);
@@ -45,12 +49,15 @@ uniform vec3 reflectance = vec3(1.0,1.0,1.0);
 uniform float roughness = 0.04;
 
 // lights
-uniform vec3 lightPositions[4];
+uniform vec3 lightPositions[12];
 uniform vec3 lightColors[4];
 vec3 lightPoints[4];
 uniform vec3 camPos;
 uniform bool twoSided = true;
+uniform bool textured = false;
 uniform vec3 lightPositionDelta = vec3(0,0,0);
+//uniform vec3 lightColor = vec3(25.2,18.9,13.5);
+uniform int numberOfLights = 1;
 
 uniform float uTime;
 
@@ -61,12 +68,13 @@ const float pi = 3.14159265;
 
 uniform sampler2D ltc_mat;
 uniform sampler2D ltc_mag;
+uniform sampler2D ambient_texture;
 
 layout (location = 0) out vec4 finalColor;
 
 
 const float PI = 3.14159265359;
-// 
+//
 
 vec3 mul(mat3 m, vec3 v)
 {
@@ -117,7 +125,7 @@ mat3 transpose(mat3 v)
 float IntegrateEdge(vec3 v1, vec3 v2)
 {
     float cosTheta = dot(v1, v2);
-    float theta = acos(cosTheta);    
+    float theta = acos(cosTheta);
     float res = cross(v1, v2).z * ((theta > 0.001) ? theta/sin(theta) : 1.0);
 
     return res;
@@ -227,7 +235,7 @@ void ClipQuadToHorizon(inout vec3 L[5], out int n)
     {
         n = 4;
     }
-    
+
     if (n == 3)
         L[3] = L[0];
     if (n == 4)
@@ -255,7 +263,7 @@ vec3 LTC_Evaluate(
 
     int n;
     ClipQuadToHorizon(L, n);
-    
+
     if (n == 0)
         return vec3(0, 0, 0);
 
@@ -285,44 +293,60 @@ vec3 LTC_Evaluate(
 }
 
 
-void main() 
+void main()
 {
-    lightPoints[0] = vec3(343,548.0,227) + lightPositionDelta;
-    lightPoints[1] = vec3(343,548.0,332) + lightPositionDelta;
-    lightPoints[2] = vec3(213,548.0,332) + lightPositionDelta;
-    lightPoints[3] = vec3(213,548.0,227) + lightPositionDelta;
+    vec3 ambient = reflectance;
+    if (textured)
+    {
+        ambient = texture(ambient_texture,fragTexCoord).rgb;
+    }
+    vec3 multi_col = vec3(0,0,0);
+    for (int i = 0; i<numberOfLights;i++)
+    {
+        vec3 lightColor = lightColors[i];
+        lightPoints[0] = lightPositions[i*4 + 0];
+        lightPoints[1] = lightPositions[i*4 + 1];
+        lightPoints[2] = lightPositions[i*4 + 2];
+        lightPoints[3] = lightPositions[i*4 + 3];
 
-    vec3 N = normalize(fragNormal);
-    vec3 V = normalize(camPos - fragPosition);
-    vec3 pos = fragPosition;
-    
-    float theta = acos(dot(N, V));
-    vec2 uv = vec2(roughness, theta/(0.5*pi));
-    uv = uv*LUT_SCALE + LUT_BIAS;
+        vec3 N = normalize(fragNormal);
+        vec3 V = normalize(camPos - fragPosition);
+        vec3 pos = fragPosition;
 
-    vec4 t = texture(ltc_mat, uv);
-    mat3 Minv = mat3(
-        vec3(  1,   0, t.y),
-        vec3(  0, t.z,   0),
-        vec3(t.w,   0, t.x)
-    );
+        float theta = acos(dot(N, V));
+        vec2 uv = vec2(roughness, theta/(0.5*pi));
+        uv = uv*LUT_SCALE + LUT_BIAS;
 
-    vec3 spec = LTC_Evaluate(N, V, pos, Minv, lightPoints, twoSided);
-    spec *=  texture(ltc_mag, uv).r;
-    
-    vec3 diff = LTC_Evaluate(N, V, pos, mat3(1), lightPoints, twoSided); 
-    vec3 lcol = vec3(25.2,18.9,13.5);
-    vec3 col  = lcol*(reflectance*spec + reflectance*diff);
-    col /= 2.0*pi;
+        vec4 t = texture(ltc_mat, uv);
+        mat3 Minv = mat3(
+            vec3(  1,   0, t.y),
+            vec3(  0, t.z,   0),
+            vec3(t.w,   0, t.x)
+        );
+
+        vec3 spec = LTC_Evaluate(N, V, pos, Minv, lightPoints, twoSided);
+        spec *=  texture(ltc_mag, uv).r;
+
+        vec3 diff = LTC_Evaluate(N, V, pos, mat3(1), lightPoints, twoSided);
+        vec3 lcol = lightColor;
+
+        vec3 col  = lcol*(ambient*spec + ambient*diff);
+        col /= 2.0*pi;
+
+        multi_col = multi_col + col;
+    }
+
+
+
 
     // HDR tonemapping
-    col = col / (col + vec3(1.0));
+    multi_col = multi_col / (multi_col + vec3(1.0));
     // gamma correct
-    col = pow(col, vec3(1.0/2.2)); 
+    multi_col = pow(multi_col, vec3(1.0/2.2));
 
-    finalColor = vec4(col, 1.0);
+    finalColor = vec4(multi_col, 1.0);
 
-    //finalColor = vec4(1,0,1, 1.0);
+    //finalColor = vec4(fragTexCoord.x,fragTexCoord.y,.75, 1.0);
 }
 
 #endif

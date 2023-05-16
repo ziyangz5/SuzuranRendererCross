@@ -46,6 +46,10 @@ void Model::Draw(const glm::mat4& viewProjMtx, const glm::vec3& camPos, const Sh
     glEnableVertexAttribArray(normLoc);
     glVertexAttribPointer(normLoc, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)12);
 
+    uint texCoordLoc = 2;
+    glEnableVertexAttribArray(texCoordLoc);
+    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)24);
+
 
     // Draw geometry
     glDrawElements(GL_TRIANGLES, Count, GL_UNSIGNED_INT, 0);
@@ -72,7 +76,13 @@ void Model::LoadObj(const std::string& path)
         auto mi = mesh->indices[i];
         glm::vec3 pos(mesh->positions[3 * mi.p], mesh->positions[3 * mi.p + 1], mesh->positions[3 * mi.p + 2]);
         glm::vec3 norm(mesh->normals[3 * mi.n], mesh->normals[3 * mi.n + 1], mesh->normals[3 * mi.n + 2]);
-        vtx2.push_back(ModelVertex{ pos,norm });
+        glm::vec2 tex_coord(0, 0);
+        if (mesh->texcoord_count > 1)
+        {
+            tex_coord = glm::vec2(mesh->texcoords[2 * mi.t], mesh->texcoords[2 * mi.t + 1]);
+        }
+
+        vtx2.push_back(ModelVertex{ pos,norm,tex_coord });
         idx2.push_back(vtx2.size() - 1);
     }
 

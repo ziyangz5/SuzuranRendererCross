@@ -5,7 +5,7 @@
 #ifndef SUZURANRENDERER_SHADER_H
 #define SUZURANRENDERER_SHADER_H
 #include "Core.h"
-
+#include "Texture.h"
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace szr
@@ -105,15 +105,43 @@ namespace szr
         {
             glUniformMatrix4fv(glGetUniformLocation(ProgramID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
         }
+
+        void setTexture(Texture* texture)
+        {
+            unsigned int texture_id;
+            glGenTextures(1, &texture_id);
+            glBindTexture(GL_TEXTURE_2D, texture_id);
+            // set the texture wrapping/filtering options (on the currently bound texture object)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture->width, texture->height, 0,
+                         GL_RGB, GL_UNSIGNED_BYTE, texture->image_data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+            this->texture = texture_id;
+            has_texture = true;
+            setBool("textured", true);
+
+        }
+
+        unsigned int getTexture()
+        {
+            return texture;
+        }
         std::string name;
+        bool has_texture = false;
     private:
         enum { eMaxShaders = 3 };
         ProgramType Type;
         Shader* Shaders[eMaxShaders];
+        unsigned int texture;
         uint ProgramID;
     };
 
     ////////////////////////////////////////////////////////////////////////////////
 
 }
+
+
 #endif //SUZURANRENDERER_SHADER_H

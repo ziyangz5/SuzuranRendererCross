@@ -8,12 +8,16 @@
 #include "3rdparty/pugixml.hpp"
 #include <regex>
 #include <filesystem>
-
+#define STB_IMAGE_IMPLEMENTATION
+#include "3rdparty/stb_image.h"
 namespace szr
 {
 
     class SceneParser
     {
+    private:
+        static inline std::filesystem::path old_path;
+        static inline std::filesystem::path current_path;
     public:
         static std::vector<std::string> split_string(const std::string& str, const std::regex& delim_regex)
         {
@@ -174,6 +178,31 @@ namespace szr
             return cam;
         }
 
+        static Texture* parse_texture(pugi::xml_node node)
+        {
+            std::filesystem::current_path(current_path);
+            Texture* texture = nullptr;
+            for (auto child : node.children()) {
+                std::string name = child.attribute("name").value();
+
+                if (name == "filename")
+                {
+                    int width, height, nrChannels;
+                    std::string filename = child.attribute("value").value();
+                    stbi_set_flip_vertically_on_load(true);
+                    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 0);
+                    texture = new Texture(data, width, height, nrChannels);
+                    if (!data)
+                    {
+                        std::cerr << "Unable to open texture:" + filename << std::endl;
+                    }
+
+                }
+            }
+            std::filesystem::current_path(old_path);
+            return texture;
+        }
+
         static auto parse_bsdf(pugi::xml_node node, std::string& material_name)
         {
             std::string type = node.attribute("type").value();
@@ -182,11 +211,11 @@ namespace szr
                 id = node.attribute("id").value();
             }
             ShaderProgram* geo_s = nullptr;
-            ShaderProgram* s = new ShaderProgram(("../shaders/" + type + ".glsl").c_str(), ShaderProgram::eRender);
+            ShaderProgram* s = new ShaderProgram(("../shaders/" +type + ".glsl").c_str(), ShaderProgram::eRender);
 
-            if (std::filesystem::exists(("../shaders/" + type + "_geo.glsl").c_str()))
+            if (std::filesystem::exists(("../shaders/" +type + "_geo.glsl").c_str()))
             {
-                geo_s = new ShaderProgram(("../shaders/" + type + "_geo.glsl").c_str(), ShaderProgram::eRender);
+                geo_s = new ShaderProgram(("../shaders/" +type + "_geo.glsl").c_str(), ShaderProgram::eRender);
                 geo_s->name = type + "_geo";
             }
 
@@ -202,6 +231,10 @@ namespace szr
                         reflectance = parse_vector3(child.attribute("value").value());
                         s->use();
                         s->setVec3(name.c_str(), reflectance);
+                    }
+                    else if (name == "texture")
+                    {
+                        std::cout << "Implementing.." << std::endl;
                     }
                 }
                 s->unuse();
@@ -235,6 +268,10 @@ namespace szr
                         ao = std::stof(child.attribute("value").value());
                         s->setFloat(name.c_str(), ao);
                     }
+                    else if (name == "texture")
+                    {
+                        std::cout << "Implementing.." << std::endl;
+                    }
                 }
                 return std::tie(s, geo_s);
             }
@@ -245,6 +282,7 @@ namespace szr
                     glm::vec3 reflectance;
                     float roughness = 0.01;
                     std::string name = child.attribute("name").value();
+                    std::string attribute_name = child.name();
                     if (name == "reflectance") {
                         reflectance = parse_vector3(child.attribute("value").value());
                         s->use();
@@ -265,6 +303,12 @@ namespace szr
                             geo_s->use();
                             geo_s->setFloat(name.c_str(), roughness);
                         }
+                    }
+                    else if (attribute_name == "texture")
+                    {
+                        Texture* texture = parse_texture(child);
+                        s->use();
+                        s->setTexture(texture);
                     }
                 }
                 s->unuse();
@@ -353,7 +397,6 @@ namespace szr
                         }
                     }
                 }
-                            std::cout<<filename<<std::endl;
                 shape->LoadObj(filename);
                 shape->SetWorldMatrix(to_world);
                 shape->shaderID = material_id;
@@ -371,13 +414,13 @@ namespace szr
             return shape;
         }
 
-        static Light parse_light(pugi::xml_node node)
+        static Light* parse_light(pugi::xml_node node)
         {
             std::string type = node.attribute("type").value();
-            Light l{};
+            Light* l = new Light();
             if (type == "point")
             {
-                l.type = LightType::Point;
+                l->type = LightType::Point;
                 for (auto child : node.children())
                 {
                     std::string name = child.name();
@@ -392,12 +435,77 @@ namespace szr
                             y = std::stof(child.attribute("y").value());
                         if (!child.attribute("z").empty())
                             z = std::stof(child.attribute("z").value());
-                        l.position = glm::vec3(x, y, z);
+                        l->position = glm::vec3(x, y, z);
                     }
                     if (name == "color")
                     {
                         glm::vec3 color = parse_vector3(child.attribute("value").value());
-                        l.color = color;
+                        l->color = color;
+                    }
+                }
+            }
+            else if (type == "area")
+            {
+                l->type = LightType::Area;
+                for (auto child : node.children())
+                {
+                    std::string name = child.name();
+                    if (name == "x1")
+                    {
+                        float x = 0.0;
+                        float y = 0.0;
+                        float z = 0.0;
+                        if (!child.attribute("x").empty())
+                            x = std::stof(child.attribute("x").value());
+                        if (!child.attribute("y").empty())
+                            y = std::stof(child.attribute("y").value());
+                        if (!child.attribute("z").empty())
+                            z = std::stof(child.attribute("z").value());
+                        l->pos_x1 = glm::vec3(x, y, z);
+                    }
+                    else if (name == "x2")
+                    {
+                        float x = 0.0;
+                        float y = 0.0;
+                        float z = 0.0;
+                        if (!child.attribute("x").empty())
+                            x = std::stof(child.attribute("x").value());
+                        if (!child.attribute("y").empty())
+                            y = std::stof(child.attribute("y").value());
+                        if (!child.attribute("z").empty())
+                            z = std::stof(child.attribute("z").value());
+                        l->pos_x2 = glm::vec3(x, y, z);
+                    }
+                    else if (name == "x3")
+                    {
+                        float x = 0.0;
+                        float y = 0.0;
+                        float z = 0.0;
+                        if (!child.attribute("x").empty())
+                            x = std::stof(child.attribute("x").value());
+                        if (!child.attribute("y").empty())
+                            y = std::stof(child.attribute("y").value());
+                        if (!child.attribute("z").empty())
+                            z = std::stof(child.attribute("z").value());
+                        l->pos_x3 = glm::vec3(x, y, z);
+                    }
+                    else if (name == "x4")
+                    {
+                        float x = 0.0;
+                        float y = 0.0;
+                        float z = 0.0;
+                        if (!child.attribute("x").empty())
+                            x = std::stof(child.attribute("x").value());
+                        if (!child.attribute("y").empty())
+                            y = std::stof(child.attribute("y").value());
+                        if (!child.attribute("z").empty())
+                            z = std::stof(child.attribute("z").value());
+                        l->pos_x4 = glm::vec3(x, y, z);
+                    }
+                    if (name == "color")
+                    {
+                        glm::vec3 color = parse_vector3(child.attribute("value").value());
+                        l->color = color;
                     }
                 }
             }
@@ -418,14 +526,14 @@ namespace szr
                 std::cerr << "Error offset: " << result.offset << std::endl;
                 throw ("Parse error");
             }
-
-            std::filesystem::path old_path = std::filesystem::current_path();
-            std::filesystem::current_path(path.parent_path());
+            old_path = std::filesystem::current_path();
+            current_path = path.parent_path();
+            std::filesystem::current_path(current_path);
 
             pugi::xml_node node = doc.child("scene");
 
             std::vector<Model*> models;
-            std::vector<Light> lights;
+            std::vector<Light*> lights;
             std::vector<ShaderProgram*> shaders;
             std::vector<ShaderProgram*> geo_shaders;
             std::map<std::string /* name id */, int /* index id */> shader_map;
@@ -441,7 +549,7 @@ namespace szr
                 }
                 else if (name == "bsdf") {
                     std::filesystem::current_path(old_path);
-                    
+
                     std::string material_name;
                     ShaderProgram* s; ShaderProgram* geo_s;
                     std::tie(s, geo_s) = parse_bsdf(child, material_name);
@@ -451,7 +559,7 @@ namespace szr
                         geo_shaders.push_back(geo_s);
                     }
 
-                    std::filesystem::current_path(path.parent_path());
+                    std::filesystem::current_path(current_path);
                 }
                 else if (name == "shape") {
                     Model* m = parse_shape(child, shaders, geo_shaders, shader_map);
@@ -461,14 +569,15 @@ namespace szr
                     //TODO: Implement texture
                 }
                 else if (name == "emitter") {
-                    //No need in opengl
+                    Light* l = parse_light(child);
+                    lights.push_back(l);
                 }
                 else if (name == "medium") {
                     //No need in opengl
                 }
-                else if (name == "light") {
-                    Light l = parse_light(child);
-                    lights.push_back(l);
+                else
+                {
+                    std::cerr << "Unknown key: "+name << std::endl;
                 }
             }
             std::filesystem::current_path(old_path);
@@ -480,5 +589,6 @@ namespace szr
     };
 
 }
+
 
 #endif //SUZURANRENDERER_SCENEPARSER_H

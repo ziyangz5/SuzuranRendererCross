@@ -193,11 +193,22 @@ void render(GLFWwindow* window, Scene* scene)
     {
         ShaderProgram* program = scene->shaders[sidx];
         program->use();
-        for (uint i = 0; i < scene->lights.size(); ++i)
+        //for (uint i = 0; i < scene->lights.size(); ++i)
+        //{
+        //    program->setVec3("lightPositions[" + std::to_string(i) + "]", scene->lights[i]->position);
+        //}
+        //TEMP: Dirty way to set light
+        //TODO: Support multiple area emitters
+        for (int i = 0; i < scene->lights.size(); i++)
         {
-            program->setVec3("lightPositions[" + std::to_string(i) + "]", scene->lights[i].position);
-            program->setVec3("lightColors[" + std::to_string(i) + "]", scene->lights[i].color);
+            program->setVec3("lightPositions[" + std::to_string(0 + i * 4) + "]", scene->lights[i]->pos_x1);
+            program->setVec3("lightPositions[" + std::to_string(1 + i * 4) + "]", scene->lights[i]->pos_x2);
+            program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3);
+            program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4);
+            program->setVec3("lightColors[" + std::to_string(i ) + "]", scene->lights[i]->color);
         }
+        program->setInt("numberOfLights", scene->lights.size());
+
         if (program->name == "area_ggx" || program->name == "glass")
         {
             std::copy(std::begin(g_ltc_mat), std::end(g_ltc_mat), std::begin(ltc_mat));
@@ -293,17 +304,25 @@ void render(GLFWwindow* window, Scene* scene)
                 continue;
             }
             program->use();
-
-            Model* model = scene->models[i];
-            model->Draw(camera.GetViewProjectionMatrix(WinX, WinY), camera.Position, program, currentFrame);
             if (program->name == "area_ggx")
             {
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, ltcMatId);
 
-                glActiveTexture(GL_TEXTURE0 + 1);
+                glActiveTexture(GL_TEXTURE1);
                 glBindTexture(GL_TEXTURE_2D, ltcMagId);
+
+                if (program->has_texture)
+                {
+                    glActiveTexture(GL_TEXTURE2);
+                    glBindTexture(GL_TEXTURE_2D, program->getTexture());
+                    program->setInt("ambient_texture", 2);
+                }
+
             }
+            Model* model = scene->models[i];
+            model->Draw(camera.GetViewProjectionMatrix(WinX, WinY), camera.Position, program, currentFrame);
+
             program->unuse();
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -402,10 +421,8 @@ int main() {
 
     printf("OpenGL version used by this application (%s): \n", glGetString(GL_VERSION));
 
-    //Scene* scene = SceneParser::parse_scene("../Scenes/cbox/cbox_opengl.xml");
-    std::cout<<"Creating Scene.."<<std::endl;
-    Scene* scene = SceneParser::parse_scene("../Scenes/cbox_t/cbox_opengl_area.xml");
-    std::cout<<"Created."<<std::endl;
+    //Scene* scene = SceneParser::parse_scene("../Scenes/cbox_t/cbox_opengl_area.xml");
+    Scene* scene = SceneParser::parse_scene("../Scenes/bathroom/bathroom_opengl_area.xml");
     camera = scene->camera;
     WinX = camera.defaultWinX;
     WinY = camera.defaultWinY;

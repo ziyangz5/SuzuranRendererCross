@@ -17,13 +17,13 @@ namespace szr
     {
     public:
         Scene(std::vector<Model*> models,
-              std::vector<Light> lights,
+              std::vector<Light*> lights,
               std::vector<ShaderProgram*> shaders,
               std::vector<ShaderProgram*> geo_shaders,
               Camera cam);
         ~Scene();
         std::vector<Model*> models;
-        std::vector<Light> lights;
+        std::vector<Light*> lights;
         std::vector<ShaderProgram*> shaders;
         std::vector<ShaderProgram*> geo_shaders;
         Camera camera;
