@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(SuzuranRenderer)
 set(pybind11_DIR ext/pybind11)
-find_package(PythonLibs REQUIRED)
+#find_package(PythonLibs REQUIRED)
 find_package(pybind11 CONFIG HINTS "ext/pybind11")
 set(CMAKE_CXX_STANDARD 17)
 set(EXT_DIR "ext/")
@@ -14,7 +14,7 @@ file(GLOB 3rdparty
         "${EXT_DIR}/3rdparty/*.cpp"
         "${EXT_DIR}/3rdparty/*.c"
         )
-include_directories(include/)
+include_directories(include/) 
 include_directories(${EXT_DIR})
 add_subdirectory(ext/pybind11)
 include_directories(ext/pybind11/include)

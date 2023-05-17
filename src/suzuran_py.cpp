@@ -222,6 +222,10 @@ public:
                 {sizeof(float)}, // stride
                 pixels).reshape({width,height,4});   // pointer to data
     }
+    void set_camera_transform(float pitch, float yaw, float x, float y, float z, bool reset)
+    {
+        scene->camera.ProcessDirectTransform(glm::vec2(pitch,yaw),glm::vec3(x,y,z),reset);
+    }
 private:
     szr::Scene* scene;
     unsigned int quadVAO = 0;
@@ -362,5 +366,6 @@ PYBIND11_MODULE(suzuran, handle)
                 py::array out = self.render();
                 return out;
             })
+            .def("set_camera_transform",&Renderer::set_camera_transform)
             ;
 }
