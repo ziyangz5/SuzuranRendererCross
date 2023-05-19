@@ -32,7 +32,7 @@ const std::string savePath = "./savedImages/";
 unsigned int quadVAO = 0;
 unsigned int quadVBO;
 
-void ConfigGBuffer(uint& gNormal, uint& gPosition, uint& gMaterial_1, uint& gMaterial_2, uint& gView, uint& gLightDir, uint& rboDepth)
+void ConfigGBuffer(uint& gNormal, uint& gPosition, uint& gMaterial_1, uint& gMaterial_2, uint& gView, uint& rboDepth)
 {
     glGenTextures(1, &gNormal);
     glBindTexture(GL_TEXTURE_2D, gNormal);
@@ -68,14 +68,6 @@ void ConfigGBuffer(uint& gNormal, uint& gPosition, uint& gMaterial_1, uint& gMat
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gView, 0);
-
-    glGenTextures(1, &gLightDir);
-    glBindTexture(GL_TEXTURE_2D, gLightDir);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, WinX, WinY, 0, GL_RGBA, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, gLightDir, 0);
-
 
     glGenRenderbuffers(1, &rboDepth);
     glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
@@ -170,8 +162,8 @@ void render(GLFWwindow* window, Scene* scene)
     glGenFramebuffers(1, &gBuffer);
     uint gNormal, gPosition, gMaterial_1, gMaterial_2, gView, gLightDir, rboDepth, screenBuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-    ConfigGBuffer(gNormal, gPosition, gMaterial_1, gMaterial_2, gView, gLightDir, rboDepth);
-    uint gAttachments[6] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4,GL_COLOR_ATTACHMENT5 };
+    ConfigGBuffer(gNormal, gPosition, gMaterial_1, gMaterial_2, gView, rboDepth);
+    uint gAttachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4};
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     //Initializing post-processing-buffer

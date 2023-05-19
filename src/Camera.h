@@ -158,6 +158,14 @@ namespace szr
             updateCameraVectors();
         }
 
+        void SetTransform(glm::vec2 eulerAngleDelta, glm::vec3 translation)
+        {
+            Yaw = eulerAngleDelta.y;
+            Pitch = eulerAngleDelta.x;
+            Position = translation;
+            updateCameraVectors();
+        }
+
         void ProcessDirectLocationChange(glm::vec3 front, glm::vec3 position)
         {
             Front = glm::normalize(front);

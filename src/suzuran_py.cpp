@@ -9,6 +9,7 @@
 #include <pybind11/pybind11.h>
 #include <iostream>
 #include "pybind11/numpy.h"
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 using namespace szr;
@@ -52,7 +53,7 @@ public:
         //Initializing g-buffer
         glGenFramebuffers(1, &gBuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-        ConfigGBuffer(gNormal, gPosition, gMaterial_1, gMaterial_2, gView, gLightDir, rboDepth);
+        ConfigGBuffer(gNormal, gPosition, gMaterial_1, gMaterial_2, gView, rboDepth);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //Initializing post-processing-buffer
@@ -77,7 +78,6 @@ public:
             //    program->setVec3("lightPositions[" + std::to_string(i) + "]", scene->lights[i]->position);
             //}
             //TEMP: Dirty way to set light
-            //TODO: Support multiple area emitters
             for (int i = 0; i < scene->lights.size(); i++)
             {
                 program->setVec3("lightPositions[" + std::to_string(0 + i * 4) + "]", scene->lights[i]->pos_x1);
@@ -130,12 +130,12 @@ public:
             if (scene->models[i]->tag.rfind("glass", 0) == 0) num_of_glass++;
         }
     }
-    pybind11::array_t<float> render()
+    py::list render()
     {
         //Geo Pass
         glDisable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-        glDrawBuffers(6, gAttachments);
+        glDrawBuffers(5, gAttachments);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0, 0, 0, 1);
 
@@ -149,11 +149,18 @@ public:
                     continue;
                 }
                 geo_program->use();
+                if (geo_program->has_texture)
+                {
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, geo_program->getTexture());
+                    geo_program->setInt("ambient_texture", 0);
+                }
                 Model* model = scene->models[i];
                 model->Draw(scene->camera.GetViewProjectionMatrix(width, height), scene->camera.Position, geo_program, 0);
                 geo_program->unuse();
             }
         }
+        std::vector<float*> gbuffers = SaveGbufferHandler();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0, 0, 0, 1);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -217,14 +224,50 @@ public:
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        return pybind11::array_t<float>(
+        std::vector<pybind11::array_t<float>> result;
+        result.reserve(GBUFFER_SIZE+2);
+        for (int i = 0;i<GBUFFER_SIZE;i++)
+        {
+            result.push_back(pybind11::array_t<float>(
+                    {width*height*4},          // shape
+                    {sizeof(float)}, // stride
+                    gbuffers[i]).reshape({width,height,4}));
+        }
+        result.push_back(pybind11::array_t<float>(
+                {width*height},          // shape
+                {sizeof(float)}, // stride
+                gbuffers[GBUFFER_SIZE]).reshape({width,height}));
+
+        result.push_back(pybind11::array_t<float>(
                 {width*height*4},          // shape
                 {sizeof(float)}, // stride
-                pixels).reshape({width,height,4});   // pointer to data
+                pixels).reshape({width,height,4}));
+
+        return py::cast(result);   // pointer to data
     }
+/*
     void set_camera_transform(float pitch, float yaw, float x, float y, float z, bool reset)
     {
         scene->camera.ProcessDirectTransform(glm::vec2(pitch,yaw),glm::vec3(x,y,z),reset);
+    }
+*/
+
+    void set_camera_transform(float pos_x,float pos_y,float pos_z,
+                              float tar_x,float tar_y,float tar_z,
+                              float up_x,float up_y,float up_z)
+    {
+        glm::vec3 pos(pos_x,pos_y,pos_z);
+        glm::vec3 target(tar_x,tar_y,tar_z);
+        glm::vec3 up(up_x,up_y,up_z);
+        glm::mat<4,4,float> to_world = glm::lookAt(pos, target, up);
+
+        glm::mat4 inverted = glm::inverse(to_world);
+        const glm::vec3 direction = -glm::vec3(inverted[2]);
+        float yaw = glm::degrees(glm::atan(direction.z, direction.x));
+        float pitch = glm::degrees(glm::asin(direction.y));
+
+        scene->camera.SetTransform(glm::vec2(pitch,yaw),pos);
+
     }
 private:
     szr::Scene* scene;
@@ -232,13 +275,14 @@ private:
     unsigned int quadVBO;
     uint gBuffer, pBuffer;
     uint gNormal, gPosition, gMaterial_1, gMaterial_2, gView, gLightDir, rboDepth, screenBuffer;
-    uint gAttachments[6] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4,GL_COLOR_ATTACHMENT5 };
+    static inline const unsigned int GBUFFER_SIZE = 5;
+    uint gAttachments[GBUFFER_SIZE] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4};
     uint pAttachments[1] = { GL_COLOR_ATTACHMENT0 };
     ShaderProgram* ppFXAA;
     uint ltcMatId,ltcMagId;
     uint pRenderingResult, pDepthBuffer;
 
-    void ConfigGBuffer(uint& gNormal, uint& gPosition, uint& gMaterial_1, uint& gMaterial_2, uint& gView, uint& gLightDir, uint& rboDepth)
+    void ConfigGBuffer(uint& gNormal, uint& gPosition, uint& gMaterial_1, uint& gMaterial_2, uint& gView, uint& rboDepth)
     {
         glGenTextures(1, &gNormal);
         glBindTexture(GL_TEXTURE_2D, gNormal);
@@ -275,14 +319,6 @@ private:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gView, 0);
 
-        glGenTextures(1, &gLightDir);
-        glBindTexture(GL_TEXTURE_2D, gLightDir);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, gLightDir, 0);
-
-
         glGenRenderbuffers(1, &rboDepth);
         glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
@@ -292,6 +328,7 @@ private:
             std::cout << "Framebuffer not complete!" << std::endl;
 
     }
+
 
     void ConfigPBuffer(uint& pRenderingResult, uint& pDepthBuffer)
     {
@@ -352,6 +389,23 @@ private:
         glReadPixels(0, 0, width, height, GL_RGBA, GL_FLOAT, pixels);
         return pixels;
     }
+
+    std::vector<float*> SaveGbufferHandler()
+    {
+        std::vector<float*> result;
+        for (int i = 0; i < GBUFFER_SIZE; i++)
+        {
+            float* pixels = new float[4 * width * height];
+            glReadBuffer(gAttachments[i]);
+            glReadPixels(0, 0, width, height, GL_RGBA, GL_FLOAT, pixels);
+            result.push_back(pixels);
+        }
+        float* depth = new float[width * height];
+
+        glReadPixels(0, 0, width, height, GL_DEPTH_COMPONENT, GL_FLOAT, depth);
+        result.push_back(depth);
+        return result;
+    }
 };
 
 PYBIND11_MODULE(suzuran, handle)
@@ -363,8 +417,7 @@ PYBIND11_MODULE(suzuran, handle)
             )
             .def(py::init<const char*>())
             .def("render",[](Renderer &self) {
-                py::array out = self.render();
-                return out;
+                return self.render();
             })
             .def("set_camera_transform",&Renderer::set_camera_transform)
             ;

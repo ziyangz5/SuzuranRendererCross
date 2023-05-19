@@ -299,6 +299,7 @@ void main()
     if (textured)
     {
         ambient = texture(ambient_texture,fragTexCoord).rgb;
+        ambient = pow(ambient, vec3(2.2));
     }
     vec3 multi_col = vec3(0,0,0);
     for (int i = 0; i<numberOfLights;i++)

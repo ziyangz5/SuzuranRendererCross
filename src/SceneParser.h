@@ -286,6 +286,13 @@ namespace szr
                         Texture* texture = parse_texture(child);
                         s->use();
                         s->setTexture(texture);
+                        s->use();
+                        s->setTexture(texture);
+                        if (geo_s != nullptr)
+                        {
+                            geo_s->use();
+                            geo_s->setTexture(texture);
+                        }
                     }
                 }
                 s->unuse();
