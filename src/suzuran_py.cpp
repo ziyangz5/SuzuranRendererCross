@@ -43,6 +43,10 @@ public:
         glEnable(GL_CULL_FACE);
         printf("OpenGL version used by this application (%s): \n", glGetString(GL_VERSION));
         scene = szr::SceneParser::parse_scene(path_to_scene);
+        width = scene->camera.defaultWinX;
+        height = scene->camera.defaultWinY;
+        glfwSetWindowSize(window, width, height);
+        glViewport(0, 0, width, height);
         initialize_scene();
     }
     void initialize_scene()
@@ -124,13 +128,13 @@ public:
             program->unuse();
             glActiveTexture(GL_TEXTURE0);
         }
-        int num_of_glass = 0;
+        num_of_glass = 0;
         for (uint i = 0; i < scene->models.size(); i++)
         {
             if (scene->models[i]->tag.rfind("glass", 0) == 0) num_of_glass++;
         }
     }
-    py::list render()
+    py::tuple render()
     {
         //Geo Pass
         glDisable(GL_BLEND);
@@ -220,6 +224,49 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         float* pixels = SaveRenderedImageHandler();
+        py::list glasses;
+        for (int glass_id = 0; glass_id < num_of_glass; glass_id++)
+        {
+            //Geo Pass
+            glDisable(GL_BLEND);
+            glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+            glDrawBuffers(5, gAttachments);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0, 0, 0, 1);
+            for (uint i = 0; i < scene->models.size(); i++)
+            {
+                if (scene->models[i]->tag != "glass" + std::to_string(glass_id)) continue;
+                ShaderProgram* geo_program = scene->geo_shaders[scene->models[i]->shaderID];
+                if (geo_program != nullptr)
+                {
+
+                    geo_program->use();
+                    Model* model = scene->models[i];
+                    model->Draw(scene->camera.GetViewProjectionMatrix(width, height), scene->camera.Position, geo_program, 0);
+                    geo_program->unuse();
+                }
+            }
+            std::vector<float*> gbuffers_glass = SaveGbufferHandler();
+            std::vector<pybind11::array_t<float>> result;
+            result.reserve(GBUFFER_SIZE+1);
+            for (int i = 0;i<GBUFFER_SIZE;i++)
+            {
+                result.push_back(pybind11::array_t<float>(
+                        {width*height*4},          // shape
+                        {sizeof(float)}, // stride
+                        gbuffers_glass[i]).reshape({width,height,4}));
+            }
+            result.push_back(pybind11::array_t<float>(
+                    {width*height},          // shape
+                    {sizeof(float)}, // stride
+                    gbuffers_glass[GBUFFER_SIZE]).reshape({width,height}));
+
+            glasses.append(py::cast(result));
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0, 0, 0, 1);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -243,7 +290,7 @@ public:
                 {sizeof(float)}, // stride
                 pixels).reshape({width,height,4}));
 
-        return py::cast(result);   // pointer to data
+        return py::make_tuple(py::cast(result),glasses);
     }
 /*
     void set_camera_transform(float pitch, float yaw, float x, float y, float z, bool reset)
@@ -269,18 +316,35 @@ public:
         scene->camera.SetTransform(glm::vec2(pitch,yaw),pos);
 
     }
+
+    //TODO: Generalize the parameter changing method
+    void set_variable(const char* name, const char* key, float value)
+    {
+        for (uint i = 0; i < scene->models.size(); i++)
+        {
+            if (scene->models[i]->tag != name) continue;
+            ShaderProgram* geo_program = scene->geo_shaders[scene->models[i]->shaderID];
+            if (geo_program != nullptr)
+            {
+                geo_program->use();
+                geo_program->setFloat(key,value);
+                geo_program->unuse();
+            }
+        }
+    }
 private:
     szr::Scene* scene;
     unsigned int quadVAO = 0;
     unsigned int quadVBO;
     uint gBuffer, pBuffer;
-    uint gNormal, gPosition, gMaterial_1, gMaterial_2, gView, gLightDir, rboDepth, screenBuffer;
+    uint gNormal, gPosition, gMaterial_1, gMaterial_2, gView, rboDepth, screenBuffer;
     static inline const unsigned int GBUFFER_SIZE = 5;
     uint gAttachments[GBUFFER_SIZE] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4};
     uint pAttachments[1] = { GL_COLOR_ATTACHMENT0 };
     ShaderProgram* ppFXAA;
     uint ltcMatId,ltcMagId;
     uint pRenderingResult, pDepthBuffer;
+    int num_of_glass;
 
     void ConfigGBuffer(uint& gNormal, uint& gPosition, uint& gMaterial_1, uint& gMaterial_2, uint& gView, uint& rboDepth)
     {
@@ -420,5 +484,6 @@ PYBIND11_MODULE(suzuran, handle)
                 return self.render();
             })
             .def("set_camera_transform",&Renderer::set_camera_transform)
+            .def("set_variable",&Renderer::set_variable)
             ;
 }

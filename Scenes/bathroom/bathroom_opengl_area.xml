@@ -43,18 +43,18 @@
         <rgb name="reflectance" value="0.578596, 0.578596, 0.578596" />
     </bsdf>
     <bsdf type="area_ggx" id="BlackWoodLacquer">
-		<float  name="roughness" value="0.15"/>
+		<float  name="roughness" value="0.1"/>
 		<rgb name="diffuse_reflectance" value="0.05, 0.05, 0.05" />
     </bsdf>
     <bsdf type="area_ggx" id="Wood">
-		<float  name="roughness" value="0.15"/>
+		<float  name="roughness" value="0.1"/>
 		<texture name="diffuse_reflectance" type="bitmap">
 			<string name="filename" value="textures/WoodPanel.jpg" />
 			<string name="filter_type" value="bilinear" />
 		</texture>
     </bsdf>
     <bsdf type="area_ggx" id="WoodFloor">
-		<float name="roughness" value="0.15" />
+		<float name="roughness" value="0.1" />
 		<texture name="diffuse_reflectance" type="bitmap">
 			<string name="filename" value="textures/WoodFloor.jpg" />
 			<string name="filter_type" value="bilinear" />
@@ -97,6 +97,15 @@
         <rgb name="diffuse_reflectance" value="0.578596, 0.578596, 0.578596" />
     </bsdf>
 
+    <bsdf type="glass" id="Door">
+        <float  name="roughness" value="0.1"/>
+        <rgb name="diffuse_reflectance" value="0.578596, 0.578596, 0.578596" />
+    </bsdf>
+
+    <bsdf type="glass" id="RoughGlass">
+        <float  name="roughness" value="0.1"/>
+        <rgb name="diffuse_reflectance" value="0.578596, 0.578596, 0.578596" />
+    </bsdf>
 
 <!-- 	<shape type="obj">
 		<string name="filename" value="meshes/bunny.obj"/>
@@ -108,6 +117,22 @@
 		</transform>
 		<ref id="WoodFloor"/>
 	</shape> -->
+
+    <shape type="obj" tag="glass0">
+        <string name="filename" value="models/door.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="Door" />
+    </shape>
+
+    <shape type="obj" tag="glass1">
+        <string name="filename" value="models/Mesh029.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughGlass" />
+    </shape>
 
 
     <shape type="obj">
