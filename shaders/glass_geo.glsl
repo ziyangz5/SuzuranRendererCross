@@ -72,7 +72,7 @@ void main()
     vec3 V = normalize(camPos - fragPosition);
     gNormal = N;
     gPosition = fragPosition;
-    gMaterial_1 = vec4(reflectance,0);
+    gMaterial_1 = vec4(reflectance,roughness);
     gMaterial_2 = vec4(1,0,0,0);
     gView = V;
     vec3 lighMidPoint = (lightPoints[0] + lightPoints[1] +lightPoints[2] +lightPoints[3])/4.0f;

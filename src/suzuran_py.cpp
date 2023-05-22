@@ -13,6 +13,7 @@
 
 namespace py = pybind11;
 using namespace szr;
+
 class Renderer
 {
 public:
@@ -251,15 +252,20 @@ public:
             result.reserve(GBUFFER_SIZE+1);
             for (int i = 0;i<GBUFFER_SIZE;i++)
             {
+                pybind11::capsule cleanup(gbuffers_glass[i], [](void *f) {delete[] static_cast<float*>(f);});
                 result.push_back(pybind11::array_t<float>(
                         {width*height*4},          // shape
                         {sizeof(float)}, // stride
-                        gbuffers_glass[i]).reshape({width,height,4}));
+                        gbuffers_glass[i],
+                        cleanup).reshape({width,height,4})
+                                 );
             }
+            pybind11::capsule cleanup(gbuffers_glass[GBUFFER_SIZE], [](void *f) {delete[] static_cast<float*>(f);});
             result.push_back(pybind11::array_t<float>(
                     {width*height},          // shape
                     {sizeof(float)}, // stride
-                    gbuffers_glass[GBUFFER_SIZE]).reshape({width,height}));
+                    gbuffers_glass[GBUFFER_SIZE],
+                    cleanup).reshape({width,height}));
 
             glasses.append(py::cast(result));
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -275,20 +281,28 @@ public:
         result.reserve(GBUFFER_SIZE+2);
         for (int i = 0;i<GBUFFER_SIZE;i++)
         {
+            pybind11::capsule cleanup(gbuffers[i], [](void *f) {delete[] static_cast<float*>(f);});
             result.push_back(pybind11::array_t<float>(
                     {width*height*4},          // shape
                     {sizeof(float)}, // stride
-                    gbuffers[i]).reshape({width,height,4}));
+                    gbuffers[i],
+                    cleanup).reshape({width,height,4}));
         }
+        {
+        pybind11::capsule cleanup(gbuffers[GBUFFER_SIZE], [](void *f) {delete[] static_cast<float*>(f);});
         result.push_back(pybind11::array_t<float>(
                 {width*height},          // shape
                 {sizeof(float)}, // stride
-                gbuffers[GBUFFER_SIZE]).reshape({width,height}));
+                gbuffers[GBUFFER_SIZE],
+                cleanup).reshape({width,height}));
+        }
 
+        pybind11::capsule cleanup(pixels, [](void *f) {delete[] static_cast<float*>(f);});
         result.push_back(pybind11::array_t<float>(
                 {width*height*4},          // shape
                 {sizeof(float)}, // stride
-                pixels).reshape({width,height,4}));
+                pixels,cleanup
+                ).reshape({width,height,4}));
 
         return py::make_tuple(py::cast(result),glasses);
     }
@@ -449,6 +463,7 @@ private:
     float* SaveRenderedImageHandler()
     {
         float* pixels = new float[4 * width * height];
+        std::vector<float> result;
         glReadBuffer(GL_BACK);
         glReadPixels(0, 0, width, height, GL_RGBA, GL_FLOAT, pixels);
         return pixels;
