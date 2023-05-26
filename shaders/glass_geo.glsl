@@ -57,26 +57,18 @@ layout (location = 1) out vec3 gPosition;
 layout (location = 2) out vec4 gMaterial_1;
 layout (location = 3) out vec4 gMaterial_2;
 layout (location = 4) out vec3 gView;
-layout (location = 5) out vec3 gLightDir;
 
 const float PI = 3.14159265359;
 
 void main() 
 {
-    lightPoints[0] = vec3(343,548.0,227) + lightPositionDelta;
-    lightPoints[1] = vec3(343,548.0,332) + lightPositionDelta;
-    lightPoints[2] = vec3(213,548.0,332) + lightPositionDelta;
-    lightPoints[3] = vec3(213,548.0,227) + lightPositionDelta;
-    
     vec3 N = normalize(fragNormal);
     vec3 V = normalize(camPos - fragPosition);
     gNormal = N;
     gPosition = fragPosition;
     gMaterial_1 = vec4(reflectance,roughness);
-    gMaterial_2 = vec4(1,0,0,0);
+    gMaterial_2 = vec4(0);
     gView = V;
-    vec3 lighMidPoint = (lightPoints[0] + lightPoints[1] +lightPoints[2] +lightPoints[3])/4.0f;
-    gLightDir = normalize(lighMidPoint - fragPosition);
 }
 
 #endif

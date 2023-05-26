@@ -121,11 +121,11 @@
 		<string name="filename" value="meshes/Page_1-2_Plane_003.obj"/>
 		<ref id="mat-Material.003"  />
 	</shape>
-	<shape type="obj">
+	<shape type="obj" tag="glass1">
 		<string name="filename" value="meshes/Page_3-4_Plane_003.obj"/>
 		<ref id="mat-page_7-8"  />
 	</shape>
-	<shape type="obj">
+	<shape type="obj" tag="glass0">
 		<string name="filename" value="meshes/Page_5-6_Plane_002.obj"/>
 		<ref id="mat-page_5-6.002"  />
 	</shape>
@@ -141,7 +141,7 @@
 		<string name="filename" value="meshes/Page_11-12_Plane_003.obj"/>
 		<ref id="mat-floor.004"  />
 	</shape>
-	<shape type="obj">
+	<shape type="obj" tag="glass2">
 		<string name="filename" value="meshes/Page_13-14_Plane_005.obj"/>
 		<ref id="mat-page_13-14.005"  />
 	</shape>
