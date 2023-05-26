@@ -48,17 +48,17 @@
 
 	<bsdf type="glass" id="mat-page_7-8">
 		<float name="roughness" value="0.0" />
-		<rgb name="transmittance" value="0.433512 0.644154 0.800000"/>
+		<rgb name="reflectance" value="0.433512 0.644154 0.800000"/>
 	</bsdf>
 
 	<bsdf type="glass" id="mat-page_13-14.005">
 		<float name="roughness" value="0.0" />
-		<rgb name="transmittance" value="0.800000 0.600000 0.250000"/>
+		<rgb name="reflectance" value="0.800000 0.600000 0.250000"/>
 	</bsdf>
 
 	<bsdf type="glass" id="mat-page_5-6.002">
 		<float name="roughness" value="0.0" />
-		<rgb name="transmittance" value="0.600000 0.450000 0.800000"/>
+		<rgb name="reflectance" value="0.600000 0.450000 0.800000"/>
 	</bsdf>
 
 	<bsdf type="area_ggx" id="mat-Material.002">
