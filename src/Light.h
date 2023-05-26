@@ -27,8 +27,11 @@ namespace szr
         glm::vec3 pos_x2;
         glm::vec3 pos_x3;
         glm::vec3 pos_x4;
+        bool two_sided = true;
     };
 }
+
+
 
 
 

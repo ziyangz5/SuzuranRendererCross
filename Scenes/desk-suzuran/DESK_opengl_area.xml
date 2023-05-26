@@ -1,0 +1,218 @@
+<scene version="2.1.0">
+
+	<!-- Defaults, these can be set via the command line: -Darg=value -->
+	<!-- Camera and Rendering Parameters -->
+
+	<integrator type="path">
+		<integer name="max_depth" value="12"/>
+	</integrator>
+
+
+	<sensor type="perspective">
+		<string name="fovAxis" value="smaller"/>
+		<float name="nearClip" value="10"/>
+		<float name="farClip" value="2800"/>
+		<float name="focusDistance" value="1000"/>
+		<transform name="to_world">
+			<rotate x="1" angle="-167.69902555906012"/>
+			<rotate y="1" angle="78.38745148140589"/>
+			<rotate z="1" angle="179.6748060421937"/>
+			<translate value="-7.341906 8.059664 2.600084"/>
+		</transform>
+		<float name="fov" value="60"/>
+
+
+		<film type="hdrfilm">
+			<integer name="width" value="1024"/>
+			<integer name="height" value="1024"/>
+
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+
+
+	<!-- Materials -->
+	<bsdf type="area_ggx" id="mat-floor.004">
+		<float  name="roughness" value="1.0"/>
+		<rgb name="reflectance" value="0.154869 0.154869 0.154869" />
+	</bsdf>
+
+	<bsdf type="area_ggx" id="mat-Material.003">
+		<float  name="roughness" value="1.0"/>
+		<texture name="diffuse_reflectance" type="bitmap">
+			<string name="filename" value="textures/formula.jpg"/>
+			<string name="filter_type" value="bilinear" />
+		</texture>
+	</bsdf>
+
+
+	<bsdf type="glass" id="mat-page_7-8">
+		<float name="roughness" value="0.0" />
+		<rgb name="transmittance" value="0.433512 0.644154 0.800000"/>
+	</bsdf>
+
+	<bsdf type="glass" id="mat-page_13-14.005">
+		<float name="roughness" value="0.0" />
+		<rgb name="transmittance" value="0.800000 0.600000 0.250000"/>
+	</bsdf>
+
+	<bsdf type="glass" id="mat-page_5-6.002">
+		<float name="roughness" value="0.0" />
+		<rgb name="transmittance" value="0.600000 0.450000 0.800000"/>
+	</bsdf>
+
+	<bsdf type="area_ggx" id="mat-Material.002">
+		<float  name="roughness" value="1.0"/>
+		<texture name="diffuse_reflectance" type="bitmap">
+			<string name="filename" value="textures/page_1.jpg"/>
+			<string name="filter_type" value="bilinear" />
+		</texture>
+	</bsdf>
+
+	<bsdf type="area_ggx" id="mat-Material.005">
+		<float  name="roughness" value="1.0"/>
+		<texture name="diffuse_reflectance" type="bitmap">
+			<string name="filename" value="textures/Mat_Base_Color.png.001.jpg"/>
+			<string name="filter_type" value="bilinear" />
+		</texture>
+	</bsdf>
+	<bsdf type="area_ggx" id="mat-Material">
+		<float  name="roughness" value="1.0"/>
+		<rgb name="reflectance" value="0.800000 0.800000 0.800000" />
+	</bsdf>
+	<bsdf type="area_ggx" id="mat-Material.004">
+		<bsdf type="roughconductor">
+			<float  name="roughness" value="0.005"/>
+			<rgb name="reflectance" value="1.000000 1.000000 1.000000" />
+		</bsdf>
+	</bsdf>
+	<bsdf type="area_ggx" id="mat-floor.005">
+		<float  name="roughness" value="1.0"/>
+		<rgb name="reflectance" value="0.154869 0.154869 0.154869" />
+	</bsdf>
+
+
+	<!-- Emitters -->
+	<emitter type="area">
+		<x1 x="-3.108036" y="14.3" z="3.453583"/>
+		<x2 x="3.108036" y="14.3" z="3.453583"/>
+		<x3 x="3.108037" y="14.3" z="-2.762491"/>
+		<x4 x="-3.108037" y="14.3" z="-2.762491"/>
+		<color value="10, 10, 10"/>
+		<two_sided value="false"/>
+	</emitter>
+
+	<emitter type="area">
+		<x1 x="3.269200" y="11.917959" z="-1.995269"/>
+		<x2 x="4.510817" y="12.613103" z="-1.924583"/>
+		<x3 x="4.564796 " y="12.631971" z="-3.058312"/>
+		<x4 x="3.323180" y="11.936829" z="-3.128998"/>
+		<color value="30, 30, 30"/>
+		<two_sided value="false"/>
+	</emitter>
+
+	<!-- Shapes -->
+
+	<shape type="obj">
+		<string name="filename" value="meshes/couverture_001_Plane_002.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_1-2_Plane_003.obj"/>
+		<ref id="mat-Material.003"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_3-4_Plane_003.obj"/>
+		<ref id="mat-page_7-8"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_5-6_Plane_002.obj"/>
+		<ref id="mat-page_5-6.002"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_7-8_Plane_002.obj"/>
+		<ref id="mat-Material.002"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_9-10_Plane_002.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_11-12_Plane_003.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_13-14_Plane_005.obj"/>
+		<ref id="mat-page_13-14.005"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_15-16_Plane_002.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_17-18_Plane_003.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_19-20_Plane_002.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_21-22_Plane_002.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Page_23-24_Plane_002.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Cover_Cube_003.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Left_1.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Desk.obj"/>
+		<ref id="mat-Material.005"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Left.obj"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Sol_001_Plane_005.obj"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-Material"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Floor_lamp01_001.obj"/>
+		<ref id="mat-Material.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Sol_001_Plane_007.obj"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-floor.005"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Sol_001_Plane_001.obj"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Sol_001_Plane_002.obj"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Sol_001_Plane_003.obj"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+	<shape type="obj">
+		<string name="filename" value="meshes/Sol_001_Plane_004.obj"/>
+		<boolean name="face_normals" value="true"/>
+		<ref id="mat-floor.004"  />
+	</shape>
+</scene>

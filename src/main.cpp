@@ -199,6 +199,7 @@ void render(GLFWwindow* window, Scene* scene)
             program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3);
             program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4);
             program->setVec3("lightColors[" + std::to_string(i ) + "]", scene->lights[i]->color);
+            program->setBool("twoSided", scene->lights[i]->two_sided);
         }
         program->setInt("numberOfLights", scene->lights.size());
 
@@ -405,7 +406,7 @@ int main() {
 
     glViewport(0, 0, WinX, WinY);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
     //glEnable(GL_FRAMEBUFFER_SRGB);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
@@ -415,7 +416,7 @@ int main() {
     printf("OpenGL version used by this application (%s): \n", glGetString(GL_VERSION));
 
     //Scene* scene = SceneParser::parse_scene("../Scenes/cbox_t/cbox_opengl_area.xml");
-    Scene* scene = SceneParser::parse_scene("../Scenes/bathroom/bathroom_opengl_area.xml");
+    Scene* scene = SceneParser::parse_scene("../Scenes/desk-suzuran/DESK_opengl_area.xml");
     camera = scene->camera;
     WinX = camera.defaultWinX;
     WinY = camera.defaultWinY;

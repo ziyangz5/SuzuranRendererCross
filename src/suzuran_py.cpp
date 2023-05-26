@@ -90,6 +90,7 @@ public:
                 program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3);
                 program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4);
                 program->setVec3("lightColors[" + std::to_string(i ) + "]", scene->lights[i]->color);
+                program->setBool("twoSided", scene->lights[i]->two_sided);
             }
             program->setInt("numberOfLights", scene->lights.size());
 

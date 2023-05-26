@@ -25,6 +25,15 @@ namespace szr
             return list;
         }
 
+        static bool parse_boolean(const std::string& value)
+        {
+            if (value == "true")
+            {
+                return true;
+            }
+            return false;
+        }
+
         static glm::mat4 parse_mat4(const std::string& value)
         {
             std::vector<std::string> list = split_string(value, std::regex("(,| )+"));
@@ -490,6 +499,11 @@ namespace szr
                     {
                         glm::vec3 color = parse_vector3(child.attribute("value").value());
                         l->color = color;
+                    }
+                    if (name == "two_sided")
+                    {
+                        bool is_two_sided = parse_boolean(child.attribute("value").value());
+                        l->two_sided = is_two_sided;
                     }
                 }
             }
