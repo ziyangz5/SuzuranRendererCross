@@ -41,7 +41,7 @@ public:
         }
         glViewport(0, 0, width, height);
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
         printf("OpenGL version used by this application (%s): \n", glGetString(GL_VERSION));
         scene = szr::SceneParser::parse_scene(path_to_scene);
         width = scene->camera.defaultWinX;
