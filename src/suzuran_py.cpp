@@ -138,6 +138,21 @@ public:
     }
     py::tuple render()
     {
+        for (unsigned int sidx = 0; sidx < scene->shaders.size(); sidx++)
+        {
+            ShaderProgram* program = scene->shaders[sidx];
+            program->use();
+            //TEMP: Dirty way to set light
+            for (int i = 0; i < scene->lights.size(); i++)
+            {
+                program->setVec3("lightPositions[" + std::to_string(0 + i * 4) + "]", scene->lights[i]->pos_x1 + scene->light_position_shift[i]);
+                program->setVec3("lightPositions[" + std::to_string(1 + i * 4) + "]", scene->lights[i]->pos_x2 + scene->light_position_shift[i]);
+                program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3 + scene->light_position_shift[i]);
+                program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4 + scene->light_position_shift[i]);
+                program->setVec3("lightColors[" + std::to_string(i ) + "]", scene->lights[i]->color);
+                program->setBool("twoSided", scene->lights[i]->two_sided);
+            }
+        }
         //Geo Pass
         glDisable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
