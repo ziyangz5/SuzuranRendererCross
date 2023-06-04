@@ -85,10 +85,10 @@ public:
             //TEMP: Dirty way to set light
             for (int i = 0; i < scene->lights.size(); i++)
             {
-                program->setVec3("lightPositions[" + std::to_string(0 + i * 4) + "]", scene->lights[i]->pos_x1);
-                program->setVec3("lightPositions[" + std::to_string(1 + i * 4) + "]", scene->lights[i]->pos_x2);
-                program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3);
-                program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4);
+                program->setVec3("lightPositions[" + std::to_string(0 + i * 4) + "]", scene->lights[i]->pos_x1 + scene->light_position_shift[i]);
+                program->setVec3("lightPositions[" + std::to_string(1 + i * 4) + "]", scene->lights[i]->pos_x2 + scene->light_position_shift[i]);
+                program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3 + scene->light_position_shift[i]);
+                program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4 + scene->light_position_shift[i]);
                 program->setVec3("lightColors[" + std::to_string(i ) + "]", scene->lights[i]->color);
                 program->setBool("twoSided", scene->lights[i]->two_sided);
             }
@@ -347,6 +347,17 @@ public:
             }
         }
     }
+
+    void set_light_position_shift(int light_id, float x, float y, float z)
+    {
+        scene->light_position_shift[light_id] = glm::vec3(x,y,z);
+    }
+
+    void set_light_color(int light_id, float r, float g, float b)
+    {
+        scene->lights[light_id]->color = glm::vec3(r,g,b);
+    }
+
 private:
     szr::Scene* scene;
     unsigned int quadVAO = 0;
@@ -501,5 +512,7 @@ PYBIND11_MODULE(suzuran, handle)
             })
             .def("set_camera_transform",&Renderer::set_camera_transform)
             .def("set_variable",&Renderer::set_variable)
+            .def("set_light_position_shift",&Renderer::set_light_position_shift)
+            .def("set_light_color",&Renderer::set_light_color)
             ;
 }

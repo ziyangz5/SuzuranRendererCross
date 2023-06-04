@@ -194,10 +194,10 @@ void render(GLFWwindow* window, Scene* scene)
         //TODO: Support multiple area emitters
         for (int i = 0; i < scene->lights.size(); i++)
         {
-            program->setVec3("lightPositions[" + std::to_string(0 + i * 4) + "]", scene->lights[i]->pos_x1);
-            program->setVec3("lightPositions[" + std::to_string(1 + i * 4) + "]", scene->lights[i]->pos_x2);
-            program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3);
-            program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4);
+            program->setVec3("lightPositions[" + std::to_string(0 + i * 4) + "]", scene->lights[i]->pos_x1 + scene->light_position_shift[i]);
+            program->setVec3("lightPositions[" + std::to_string(1 + i * 4) + "]", scene->lights[i]->pos_x2 + scene->light_position_shift[i]);
+            program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3 + scene->light_position_shift[i]);
+            program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4 + scene->light_position_shift[i]);
             program->setVec3("lightColors[" + std::to_string(i ) + "]", scene->lights[i]->color);
             program->setBool("twoSided", scene->lights[i]->two_sided);
         }

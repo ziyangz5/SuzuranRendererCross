@@ -27,7 +27,7 @@ namespace szr
         std::vector<ShaderProgram*> shaders;
         std::vector<ShaderProgram*> geo_shaders;
         Camera camera;
-
+        std::vector<glm::vec3> light_position_shift;
     };
 
 }

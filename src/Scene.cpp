@@ -7,7 +7,10 @@ Scene::Scene(std::vector<Model*> models,
              std::vector<ShaderProgram*> geo_shaders,
              Camera cam):models(models), lights(lights), shaders(shaders), geo_shaders(geo_shaders), camera(cam)
 {
-
+    for (int i = 0; i<lights.size();i++)
+    {
+        light_position_shift.emplace_back(0,0,0);
+    }
 };
 
 Scene::~Scene()
