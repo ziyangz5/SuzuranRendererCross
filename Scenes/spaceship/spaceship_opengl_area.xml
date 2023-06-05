@@ -1,0 +1,759 @@
+<?xml version="1.0"?>
+<scene version="2.2.1">
+    <sensor type="perspective" id="var_sensor">
+        <float name="fov" value="60" />
+        <transform name="to_world">
+           <lookat origin="-2, 1, -2" target="0, 0, 0"  up="0,1,0"/>
+        </transform>
+         <film type="hdrfilm">
+            <integer name="width" value="1024" />
+            <integer name="height" value="1024" />
+        </film>
+    </sensor>
+    <bsdf type="area_ggx" id="Backdrop">
+        <float  name="roughness" value="1.0"/>
+        <rgb name="reflectance" value="0.1, 0.1, 0.1" />
+    </bsdf>
+    <bsdf type="area_ggx" id="RoughAluminium">
+        <float name="roughness" value="0.1" />
+        <rgb name="reflectance" value="0.578596, 0.578596, 0.578596" />
+    </bsdf>
+    <bsdf type="area_ggx" id="RoughSteel">
+        <float name="roughness" value="0.1" />
+        <rgb name="reflectance" value="1.0, 1.0, 1.0" />
+    </bsdf>
+    <bsdf type="area_ggx" id="DarkPlastic">
+        <float name="roughness" value="0.2" />
+        <rgb name="reflectance" value="0.01, 0.01, 0.01" />
+    </bsdf>
+
+    <bsdf type="area_ggx" id="PinkLeather">
+        <float name="roughness" value="0.4" />
+        <rgb name="reflectance" value="0.256, 0.013, 0.08" />
+    </bsdf>
+
+    <bsdf type="area_ggx" id="Leather">
+        <float name="roughness" value="0.4" />
+        <rgb name="reflectance" value="0.034, 0.014, 0.008" />
+    </bsdf>
+
+    <bsdf type="area_ggx" id="RedLeather">
+        <float name="roughness" value="0.4" />
+        <rgb name="reflectance" value="0.163, 0.03, 0.037" />
+    </bsdf>
+
+    <bsdf type="area_ggx" id="BrightPinkLeather">
+        <float name="roughness" value="0.4" />
+        <rgb name="reflectance" value="0.772, 0.175, 0.262" />
+    </bsdf>
+
+    <bsdf type="glass" id="Glass">
+        <float name="roughness" value="0.001" />
+        <rgb name="reflectance" value="1,0.75,0.85"/>
+    </bsdf>
+    <bsdf type="glass" id="Glass2">
+		<float name="roughness" value="0.1" />
+        <rgb name="reflectance" value="1,0.8,0.8"/>
+    </bsdf>
+
+    <bsdf type="area_ggx" id="DarkRubber">
+        <float name="roughness" value="0.4" />
+        <rgb name="reflectance" value="0.025, 0.025, 0.025" />
+    </bsdf>
+
+    <bsdf type="area_ggx" id="Black">
+        <float name="roughness" value="1.0" />
+        <rgb name="reflectance" value="0.0, 0.0, 0.0" />
+    </bsdf>
+
+    <shape type="obj">
+        <string name="filename" value="models/Mesh050.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="Backdrop" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh042.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh044.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="Leather" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh038.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh040.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh072.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh033.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh028.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="Leather" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh055.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RedLeather" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh053.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="DarkPlastic" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh036.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RedLeather" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh035.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="PinkLeather" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh031.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RedLeather" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh030.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="PinkLeather" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh027.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh064.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh058.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh029.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="Black" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh080.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="Black" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh067.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh060.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh026.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh047.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh061.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="DarkPlastic" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh063.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="DarkRubber" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh065.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh048.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh066.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh068.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="DarkRubber" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh071.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh046.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh076.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh059.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh057.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh062.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh074.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh075.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh078.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh081.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh034.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh084.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh085.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh073.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh077.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh087.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh052.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh025.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh024.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh086.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh023.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh021.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh039.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh020.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh032.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh019.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh018.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh070.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh016.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh015.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh054.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh013.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh079.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh041.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh012.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh011.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh083.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh010.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh069.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh009.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh007.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh017.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh006.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh037.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh008.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh045.obj" /> 
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh005.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh004.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh049.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh082.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh014.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh003.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh002.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh051.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughSteel" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh001.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="Glass" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh056.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RoughAluminium" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh000.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="BrightPinkLeather" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/Mesh022.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="RedLeather" />
+    </shape>
+
+
+    <shape type="obj">
+        <string name="filename" value="models/ceil.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <boolean name="face_normals" value="true" />
+        <ref id="Backdrop" />
+    </shape>
+    <shape type="obj">
+        <string name="filename" value="models/glass.obj" />
+        <transform name="to_world">
+            <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+        </transform>
+        <ref id="Glass2" />
+    </shape>
+    <!-- emitters -->
+
+    <emitter type="area">
+        <x1 x="-1.461672" y="5.2" z="1.339866"/>
+        <x2 x="1.461672" y="5.2" z="1.339866"/>
+        <x3 x="1.461672" y="5.2" z="-1.339866"/>
+        <x4 x="-1.461672" y="5.2" z="-1.339866"/>
+        <color value="40, 40, 40"/>
+        <two_sided value="true"/>
+    </emitter>
+
+    <emitter type="area">
+        <x1 x="-0.69" y="0.69" z="0.091"/>
+        <x2 x="-0.65" y="0.82" z="0.091"/>
+        <x3 x="-0.65 " y="0.82" z="-0.091"/>
+        <x4 x="-0.69" y="0.69" z="-0.091"/>
+        <color value="421,110,110"/>
+        <two_sided value="false"/>
+    </emitter>
+
+
+</scene>

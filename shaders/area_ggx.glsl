@@ -53,7 +53,7 @@ uniform vec3 lightPositions[12];
 uniform vec3 lightColors[4];
 vec3 lightPoints[4];
 uniform vec3 camPos;
-uniform bool twoSided = true;
+uniform bool twoSided[4];
 uniform bool textured = false;
 uniform vec3 lightPositionDelta = vec3(0,0,0);
 //uniform vec3 lightColor = vec3(25.2,18.9,13.5);
@@ -325,10 +325,10 @@ void main()
             vec3(t.w,   0, t.x)
         );
 
-        vec3 spec = LTC_Evaluate(N, V, pos, Minv, lightPoints, twoSided);
+        vec3 spec = LTC_Evaluate(N, V, pos, Minv, lightPoints, twoSided[i]);
         spec *=  texture(ltc_mag, uv).r;
 
-        vec3 diff = LTC_Evaluate(N, V, pos, mat3(1), lightPoints, twoSided);
+        vec3 diff = LTC_Evaluate(N, V, pos, mat3(1), lightPoints, twoSided[i]);
         vec3 lcol = lightColor;
 
         vec3 col  = lcol*(ambient*spec + ambient*diff);

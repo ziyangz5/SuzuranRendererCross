@@ -150,7 +150,7 @@ public:
                 program->setVec3("lightPositions[" + std::to_string(2 + i * 4) + "]", scene->lights[i]->pos_x3 + scene->light_position_shift[i]);
                 program->setVec3("lightPositions[" + std::to_string(3 + i * 4) + "]", scene->lights[i]->pos_x4 + scene->light_position_shift[i]);
                 program->setVec3("lightColors[" + std::to_string(i ) + "]", scene->lights[i]->color);
-                program->setBool("twoSided", scene->lights[i]->two_sided);
+                program->setBool("twoSided[" + std::to_string(i ) + "]", scene->lights[i]->two_sided);
             }
         }
         //Geo Pass
