@@ -690,7 +690,7 @@
         </transform>
         <ref id="RoughSteel" />
     </shape>
-    <shape type="obj">
+    <shape type="obj" tag="glass0">
         <string name="filename" value="models/Mesh001.obj" />
         <transform name="to_world">
             <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
@@ -728,7 +728,7 @@
         <boolean name="face_normals" value="true" />
         <ref id="Backdrop" />
     </shape>
-    <shape type="obj">
+    <shape type="obj" tag="glass1">
         <string name="filename" value="models/glass.obj" />
         <transform name="to_world">
             <matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
