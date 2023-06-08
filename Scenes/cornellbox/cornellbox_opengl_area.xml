@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="0.4.0">
+	<integrator type="path">
+		<integer name="maxDepth" value="-1"/>
+	</integrator>
+
+	<sensor type="perspective">
+		<string name="fovAxis" value="smaller"/>
+		<float name="nearClip" value="10"/>
+		<float name="farClip" value="2800"/>
+		<float name="focusDistance" value="1000"/>
+		<transform name="toWorld">
+			<lookAt origin="0, 20, -40" target="0, 20, 0" up="0, 1, 0"/>
+		</transform>
+		<float name="fov" value="60"/>
+
+		<sampler type="ldsampler">
+			<integer name="sampleCount" value="4"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="width" value="1024"/>
+			<integer name="height" value="1024"/>
+
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+
+	<bsdf type="area_ggx" id="dragon">
+		<rgb  name="reflectance" value="0.8,0.8,0.8"/>
+		<float  name="roughness" value="0.1"/>
+	</bsdf>
+
+	<bsdf type="area_ggx" id="white">
+		<rgb  name="reflectance" value="1.0,1.0,1.0"/>
+		<float  name="roughness" value="0.99"/>
+	</bsdf>
+	
+	<bsdf type="area_ggx" id="checker">
+		<rgb  name="reflectance" value="1.0,1.0,1.0"/>
+		<float  name="roughness" value="0.99"/>
+		<texture name="diffuse_reflectance" type="bitmap">
+			<string name="filename" value="textures/checkerboard.jpg" />
+			<string name="filter_type" value="bilinear" />
+        </texture>
+	</bsdf>
+
+	
+	<bsdf type="area_ggx" id="red">
+		<rgb  name="reflectance" value="0.800000 0.600000 0.0"/>
+		<float  name="roughness" value="0.25"/>
+	</bsdf>
+
+	<bsdf type="area_ggx" id="green">
+		<rgb  name="reflectance" value="0.600000 0.0 0.800000"/>
+		<float  name="roughness" value="0.25"/>
+	</bsdf>
+	
+	<bsdf type="area_ggx" id="bunny_bsdf">
+		<rgb  name="reflectance" value="1.0,0.9,1.0"/>
+		<float  name="roughness" value="0.1"/>
+		<texture name="diffuse_reflectance" type="bitmap">
+			<string name="filename" value="textures/bunny-atlas.jpg" />
+			<string name="filter_type" value="bilinear" />
+        </texture>
+	</bsdf>
+	
+	<bsdf type="glass" id="glass0">
+		<rgb  name="reflectance" value="0.0,0.9,0.9"/>
+		<float  name="roughness" value="0.01"/>
+	</bsdf>
+	
+	<bsdf type="glass" id="glass1">
+		<rgb  name="reflectance" value="0.9,0.0,0.9"/>
+		<float  name="roughness" value="0.01"/>
+	</bsdf>
+	
+
+
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_floor.obj"/>
+	
+		<ref id="checker"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_ceiling.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_back.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_greenwall.obj"/>
+
+		<ref id="green"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_redwall.obj"/>
+
+		<ref id="red"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/bunny.obj"/>
+		<ref id="bunny_bsdf"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/dragon.obj"/>
+		<ref id="dragon"/>
+	</shape>
+	
+ 	<shape type="obj" tag="glass0">
+		<string name="filename" value="meshes/glass0.obj"/>
+		<ref id="glass0"/>
+	</shape>
+	
+	<shape type="obj" tag="glass1">
+		<string name="filename" value="meshes/glass1.obj"/>
+		<ref id="glass1"/>
+	</shape> 
+	
+	<emitter type="area">
+		<x1 x="10.194077" y="51.7" z="11.480576"/>
+		<x2 x="10.194077" y="51.7" z="22.279419"/>
+		<x3 x="-3.175919" y="51.7" z="22.279419"/>
+		<x4 x="-3.175919" y="51.7" z="11.480576"/>
+		<color value="60,55,40"/>
+	</emitter>
+</scene>

@@ -363,6 +363,17 @@ public:
         }
     }
 
+    void translate_shape(const char* name, float x, float y,float z)
+    {
+        for (uint i = 0; i < scene->models.size(); i++)
+        {
+            if (scene->models[i]->tag != name) continue;
+            scene->models[i]->SetWorldMatrix(glm::identity<glm::mat4>());
+            scene->models[i]->ApplyTransformMatrix(glm::translate(glm::vec3(x,y,z)));
+            break;
+        }
+    }
+
     void set_light_position_shift(int light_id, float x, float y, float z)
     {
         scene->light_position_shift[light_id] = glm::vec3(x,y,z);
@@ -529,5 +540,7 @@ PYBIND11_MODULE(suzuran, handle)
             .def("set_variable",&Renderer::set_variable)
             .def("set_light_position_shift",&Renderer::set_light_position_shift)
             .def("set_light_color",&Renderer::set_light_color)
+            .def("translate_shape",&Renderer::translate_shape)
+
             ;
 }

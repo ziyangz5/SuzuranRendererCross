@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="0.4.0">
+<integrator type="aov">
+        <string name="aovs" value="1emission:emission, 2normal:sh_normal, 3position:position, 4wi:wi, 5albedo:albedo, 6alpha:alpha" />
+        <integrator type="path" name="image">
+			<integer name="max_depth" value="5"/>
+            <boolean name="hide_emitters" value="false" />
+        </integrator>
+		<integer name="samples_per_pass" value="20"/>
+    </integrator>
+    <sensor type="perspective" id="var_sensor">
+        <float name="fov" value="60" />
+		<transform name="toWorld">
+			<lookAt origin="0, 20, -40" target="0, 20, 0" up="0, 1, 0"/>
+		</transform>
+		<sampler type="independent">
+            <integer name="sample_count" value="20" />
+        </sampler>
+         <film type="hdrfilm">
+            <integer name="width" value="256" />
+            <integer name="height" value="256" />
+            <rfilter type="tent" />
+			<string name="component_format" value="float32"/>
+        </film>
+		<vector name="min_bounds" value="-5, 20, -40"/>
+		<vector name="range_bounds" value="5, 10, 10"/>
+		<integer name="num_parameters" value="5"/>
+    </sensor>
+
+
+
+	<bsdf type="plastic" id="dragon">
+		<rgb name="diffuse_reflectance" value="1.0, 1.0, 1.0"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="white">
+		<rgb  name="reflectance" value="1.0,1.0,1.0"/>
+	</bsdf>
+	
+	<bsdf type="diffuse" id="checker">
+		<texture name="diffuse_reflectance" type="bitmap">
+			<string name="filename" value="textures/checkerboard.jpg" />
+			<string name="filter_type" value="bilinear" />
+        </texture>
+	</bsdf>
+
+	
+	<bsdf type="roughplastic" id="red">
+		<rgb  name="diffuse_reflectance" value="1.0,0.0,0.0"/>
+		<float  name="alpha" value="0.25"/>
+	</bsdf>
+
+	<bsdf type="roughplastic" id="green">
+		<rgb  name="diffuse_reflectance" value="0.0,1.0,0.0"/>
+		<float  name="alpha" value="0.25"/>
+	</bsdf>
+	
+	<bsdf type="roughplastic" id="bunny_bsdf">
+		<float  name="alpha" value="0.1"/>
+		<texture name="diffuse_reflectance" type="bitmap">
+			<string name="filename" value="textures/bunny-atlas.jpg" />
+			<string name="filter_type" value="bilinear" />
+        </texture>
+	</bsdf>
+	
+	<bsdf type="roughdielectric" id="glass0">
+		<float name="alpha" value="0.01" />
+		<rgb  name="specular_transmittance" value="0.800000 0.600000 0.0"/>
+		<string name="distribution" value="ggx" />
+		<float name="int_ior" value="1.01" />
+		<float name="ext_ior" value="1" />
+    </bsdf>
+	
+	<bsdf type="roughdielectric" id="glass1">
+		<float name="alpha" value="0.01" />
+		<rgb  name="specular_transmittance" value="0.600000 0.0 0.800000"/>
+		<string name="distribution" value="ggx" />
+		<float name="int_ior" value="1.01" />
+		<float name="ext_ior" value="1" />
+    </bsdf>
+	
+
+
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_floor.obj"/>
+		<ref id="checker"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_ceiling.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_back.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_greenwall.obj"/>
+
+		<ref id="green"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/cbox_redwall.obj"/>
+
+		<ref id="red"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/bunny.obj"/>
+		<ref id="bunny_bsdf"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="meshes/dragon.obj"/>
+		<ref id="dragon"/>
+	</shape>
+	
+ 	<shape type="obj" id="var_glass0">
+		<string name="filename" value="meshes/glass0.obj"/>
+		<vector name="min_bounds" value="0, 0, 0"/>
+		<vector name="range_bounds" value="0, 0, 15"/>
+		<integer name="num_parameters" value="1"/>
+		<ref id="glass0"/>
+	</shape>
+	
+ 	<shape type="obj" id="var_glass1">
+		<string name="filename" value="meshes/glass1.obj"/>
+		<vector name="min_bounds" value="0, 0, 0"/>
+		<vector name="range_bounds" value="0, 0, 15"/>
+		<integer name="num_parameters" value="1"/>
+		<ref id="glass1"/>
+	</shape>  
+	
+	<shape type="obj" id="var_light">
+        <string name="filename" value="meshes/cbox_luminaire.obj" />
+		<emitter type="area" id="ceil_emitter">
+            <rgb name="radiance" value="60,55,40" />
+		</emitter> 
+		<vector name="min_bounds" value="-10, 0, 0"/>
+		<vector name="range_bounds" value="20, 0, 0"/>
+		<integer name="num_parameters" value="1"/>
+		<ref id="white"/>
+    </shape>
+</scene>
