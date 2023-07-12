@@ -7,6 +7,17 @@
 #include <fstream>
 #include "SceneParser.h"
 #include "ltc.h"
+
+#include <torch/torch.h>
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <cuda_runtime_api.h>
+#include <cuda_gl_interop.h>
+#include <curand.h>
+#include <curand_kernel.h>
+#include <vector_types.h>
+#include "cudahelperlib.h"
+
 #include <random>
 
 using namespace szr;
@@ -132,21 +143,31 @@ void PostProcessingRendering(ShaderProgram* ppShader, uint& pRenderingResult)
     ppShader->unuse();
 }
 
-auto GetExperimentTransformation(float currentFrame, int num_of_glass)
+void CreateCUDAResource( cudaGraphicsResource_t& cudaResource, GLuint GLtexture, cudaGraphicsMapFlags mapFlags )
 {
-    glm::vec3 camera_translate(0, 0, 0);
-    glm::vec2 camera_euler_delta(0, 0);
-    glm::vec3 lightPositionDelta(0, 0, 0);
-    std::vector<glm::vec3> glass_shift;
-    for (int i = 0; i < num_of_glass; i++)
-    {
-        float x_delta = (i + 1) * 75;
-        float z_delta = (sin(currentFrame/3.5f + (float)i / 3) + 1) / 2 * 400;
-        glass_shift.push_back(glm::vec3(x_delta, 0, z_delta));
-    }
-    return std::make_tuple(camera_translate, camera_euler_delta, lightPositionDelta, glass_shift);
-
+    // Map the GL texture resource with the CUDA resource
+    cudaErrorCheck(cudaGraphicsGLRegisterImage( &cudaResource, GLtexture, GL_TEXTURE_2D, mapFlags ));
 }
+
+// Create a texture resource for rendering to.
+void CreateTexture( GLuint& texture, unsigned int width, unsigned int height )
+{
+    glGenTextures( 1, &texture );
+    glBindTexture( GL_TEXTURE_2D, texture );
+
+    // set basic parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Create texture data (4-component unsigned byte)
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
+
+    // Unbind the texture
+    glBindTexture( GL_TEXTURE_2D, 0 );
+}
+
 
 void render(GLFWwindow* window, Scene* scene)
 {
@@ -177,6 +198,12 @@ void render(GLFWwindow* window, Scene* scene)
     ConfigPBuffer(pRenderingResult, pDepthBuffer);
     uint pAttachments[1] = { GL_COLOR_ATTACHMENT0 };
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    cudaGraphicsResource_t gCUDAResourceDst = 0;
+    uint cudaResult;
+    CreateTexture( cudaResult, WinX, WinY );
+    //CreateCUDAResource( g_CUDAGraphicsResource[0], pRenderingResult, cudaGraphicsMapFlagsReadOnly );
+    CreateCUDAResource( gCUDAResourceDst, cudaResult, cudaGraphicsMapFlagsWriteDiscard );
+
 
     std::mt19937 gen(42);
     std::vector<std::tuple<glm::vec3, glm::vec2, glm::vec3,std::vector<glm::vec3>>> record;
@@ -378,6 +405,20 @@ int main(int argc, char *argv[]) {
     WinY = camera.defaultWinY;
     glfwSetWindowSize(window, WinX, WinY);
     glViewport(0, 0, WinX, WinY);
+
+    int device_count;
+    cudaErrorCheck(cudaGetDeviceCount(&device_count));
+    if (device_count == 0) {
+        fprintf(stderr, "CUDA Error: No cuda device found");
+    }
+    else
+    {
+        cudaErrorCheck(cudaSetDevice(0));
+        std::cout <<"CUDA initialized with device count = " << device_count << std::endl;
+    }
+
+
+
     render(window, scene);
 
     glfwTerminate();

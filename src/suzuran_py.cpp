@@ -26,7 +26,7 @@ public:
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
+        //glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
 
         window = glfwCreateWindow(width, height, "test", NULL, NULL);
         if (window == NULL) {
@@ -138,6 +138,7 @@ public:
     }
     py::tuple render()
     {
+	glfwMakeContextCurrent(window);
         for (unsigned int sidx = 0; sidx < scene->shaders.size(); sidx++)
         {
             ShaderProgram* program = scene->shaders[sidx];
